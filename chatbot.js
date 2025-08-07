@@ -2,7 +2,7 @@
 class LoveAdvisorChatBot {
     constructor() {
         // ⚠️ 重要：請替換為您的 n8n webhook URL
-        this.webhookUrl = 'https://joannayayaya.app.n8n.cloud/webhook/love-chat';
+        this.webhookUrl = 'https://joannayayaya.app.n8n.cloud/webhook/chat';
         
         // 初始化 session ID
         this.sessionId = this.getOrCreateSessionId();
