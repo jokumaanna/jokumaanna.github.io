@@ -1,24 +1,24 @@
-// ChatBot 類別
-class ChatBot {
+// 愛情顧問聊天機器人類別
+class LoveAdvisorChatBot {
     constructor() {
         // ⚠️ 重要：請替換為您的 n8n webhook URL
-        this.webhookUrl = 'https://joannayayaya.app.n8n.cloud/webhook/chat';
+        this.webhookUrl = 'https://joannayayaya.app.n8n.cloud/webhook/love-chat';
         
         // 初始化 session ID
         this.sessionId = this.getOrCreateSessionId();
         
-        // 創建 ChatBot UI
+        // 創建聊天機器人 UI
         this.createChatBotUI();
         
         // DOM 元素
-        this.chatbotToggle = document.getElementById('chatbotToggle');
-        this.chatbotPanel = document.getElementById('chatbotPanel');
-        this.chatbotClose = document.getElementById('chatbotClose');
-        this.messagesContainer = document.getElementById('chatMessages');
-        this.messageInput = document.getElementById('messageInput');
-        this.sendButton = document.getElementById('sendButton');
-        this.typingIndicator = document.getElementById('typingIndicator');
-        this.notificationBadge = document.getElementById('notificationBadge');
+        this.chatbotToggle = document.getElementById('loveAdvisorToggle');
+        this.chatbotPanel = document.getElementById('loveAdvisorPanel');
+        this.chatbotClose = document.getElementById('loveAdvisorClose');
+        this.messagesContainer = document.getElementById('loveMessages');
+        this.messageInput = document.getElementById('loveMessageInput');
+        this.sendButton = document.getElementById('loveSendButton');
+        this.typingIndicator = document.getElementById('loveTypingIndicator');
+        this.notificationBadge = document.getElementById('loveNotificationBadge');
         
         // 綁定事件
         this.bindEvents();
@@ -26,366 +26,421 @@ class ChatBot {
         // 載入對話歷史
         this.loadChatHistory();
         
-        console.log('ChatBot 初始化完成，Session ID:', this.sessionId);
+        console.log('愛情顧問聊天機器人初始化完成，Session ID:', this.sessionId);
     }
     
     createChatBotUI() {
-        // 創建 CSS 樣式
+        // 創建浪漫的 CSS 樣式
         const style = document.createElement('style');
         style.textContent = `
-            .chatbot-widget {
+            .love-advisor-widget {
                 position: fixed;
                 bottom: 20px;
                 right: 20px;
                 z-index: 1000;
             }
 
-            .chatbot-toggle {
-                width: 60px;
-                height: 60px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            .love-advisor-toggle {
+                width: 70px;
+                height: 70px;
+                background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #f8b500 100%);
                 border: none;
                 border-radius: 50%;
                 cursor: pointer;
-                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+                box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
                 transition: all 0.3s ease;
                 color: white;
-                font-size: 24px;
+                font-size: 28px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 position: relative;
+                animation: heartbeat 2s infinite;
             }
 
-            .chatbot-toggle:hover {
-                transform: scale(1.1);
-                box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+            @keyframes heartbeat {
+                0%, 50%, 100% { transform: scale(1); }
+                25%, 75% { transform: scale(1.05); }
             }
 
-            .chatbot-panel {
+            .love-advisor-toggle:hover {
+                transform: scale(1.15);
+                box-shadow: 0 10px 30px rgba(255, 107, 157, 0.6);
+                animation-play-state: paused;
+            }
+
+            .love-advisor-panel {
                 position: absolute;
-                bottom: 80px;
+                bottom: 90px;
                 right: 0;
-                width: 350px;
-                height: 500px;
-                background: white;
-                border-radius: 15px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                width: 380px;
+                height: 550px;
+                background: linear-gradient(135deg, #ffeef8 0%, #fff0f3 100%);
+                border-radius: 20px;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.15);
                 display: none;
                 flex-direction: column;
                 overflow: hidden;
-                border: 1px solid rgba(102, 126, 234, 0.1);
+                border: 2px solid rgba(255, 107, 157, 0.2);
+                backdrop-filter: blur(10px);
             }
 
-            .chatbot-panel.active {
+            .love-advisor-panel.active {
                 display: flex;
-                animation: slideUp 0.3s ease-out;
+                animation: romanticSlideUp 0.4s ease-out;
             }
 
-            @keyframes slideUp {
+            @keyframes romanticSlideUp {
                 from {
                     opacity: 0;
-                    transform: translateY(20px);
+                    transform: translateY(30px) scale(0.95);
                 }
                 to {
                     opacity: 1;
-                    transform: translateY(0);
+                    transform: translateY(0) scale(1);
                 }
             }
 
-            .chatbot-header {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            .love-advisor-header {
+                background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #f8b500 100%);
                 color: white;
-                padding: 15px;
+                padding: 20px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                position: relative;
+                overflow: hidden;
             }
 
-            .chatbot-title {
-                font-size: 16px;
+            .love-advisor-header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="20" fill="rgba(255,255,255,0.1)">💖</text></svg>') repeat;
+                animation: floatingHearts 20s linear infinite;
+            }
+
+            @keyframes floatingHearts {
+                0% { transform: translate(0, 0); }
+                100% { transform: translate(-50px, -50px); }
+            }
+
+            .love-advisor-title {
+                font-size: 18px;
                 font-weight: bold;
+                z-index: 1;
+                position: relative;
             }
 
-            .chatbot-close {
+            .love-advisor-close {
                 background: none;
                 border: none;
                 color: white;
-                font-size: 18px;
+                font-size: 20px;
                 cursor: pointer;
-                width: 30px;
-                height: 30px;
+                width: 35px;
+                height: 35px;
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                transition: background 0.2s ease;
+                transition: all 0.3s ease;
+                z-index: 1;
+                position: relative;
             }
 
-            .chatbot-close:hover {
+            .love-advisor-close:hover {
                 background: rgba(255,255,255,0.2);
+                transform: rotate(90deg);
             }
 
-            .chat-messages {
+            .love-messages {
                 flex: 1;
                 overflow-y: auto;
-                padding: 15px;
+                padding: 20px;
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
-                background: #f8f9fa;
+                gap: 15px;
+                background: linear-gradient(135deg, #ffeef8 0%, #fff0f3 100%);
             }
 
-            .message {
-                max-width: 80%;
-                padding: 10px 12px;
-                border-radius: 15px;
-                line-height: 1.4;
+            .love-message {
+                max-width: 85%;
+                padding: 12px 16px;
+                border-radius: 20px;
+                line-height: 1.5;
                 word-wrap: break-word;
                 font-size: 14px;
-                animation: messageSlide 0.3s ease-out;
+                animation: loveMessageSlide 0.5s ease-out;
+                position: relative;
             }
 
-            @keyframes messageSlide {
+            @keyframes loveMessageSlide {
                 from {
                     opacity: 0;
-                    transform: translateY(10px);
+                    transform: translateY(15px) scale(0.95);
                 }
                 to {
                     opacity: 1;
-                    transform: translateY(0);
+                    transform: translateY(0) scale(1);
                 }
             }
 
-            .message.user {
-                background: linear-gradient(135deg, #667eea, #764ba2);
+            .love-message.user {
+                background: linear-gradient(135deg, #ff6b9d, #c44569);
                 color: white;
                 align-self: flex-end;
-                border-bottom-right-radius: 4px;
+                border-bottom-right-radius: 6px;
+                box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
             }
 
-            .message.ai {
+            .love-message.advisor {
                 background: white;
-                color: #333;
+                color: #2d3436;
                 align-self: flex-start;
-                border-bottom-left-radius: 4px;
-                border: 1px solid #e9ecef;
+                border-bottom-left-radius: 6px;
+                border: 1px solid rgba(255, 107, 157, 0.2);
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
 
-            .message.system {
-                background: #28a745;
+            .love-message.system {
+                background: linear-gradient(135deg, #fd79a8, #fdcb6e);
                 color: white;
                 align-self: center;
-                font-size: 12px;
+                font-size: 13px;
+                max-width: 90%;
+                text-align: center;
+                box-shadow: 0 2px 10px rgba(253, 121, 168, 0.3);
+            }
+
+            .love-message.error-message {
+                background: linear-gradient(135deg, #e17055, #d63031);
+                color: white;
+                align-self: center;
+                font-size: 13px;
                 max-width: 90%;
                 text-align: center;
             }
 
-            .message.error-message {
-                background: #dc3545;
-                color: white;
-                align-self: center;
-                font-size: 12px;
-                max-width: 90%;
-                text-align: center;
-            }
-
-            .typing-indicator {
+            .love-typing-indicator {
                 display: none;
                 align-self: flex-start;
-                padding: 10px 12px;
+                padding: 12px 16px;
                 background: white;
-                border-radius: 15px;
-                border-bottom-left-radius: 4px;
-                border: 1px solid #e9ecef;
+                border-radius: 20px;
+                border-bottom-left-radius: 6px;
+                border: 1px solid rgba(255, 107, 157, 0.2);
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
 
-            .typing-dots {
+            .love-typing-dots {
                 display: flex;
-                gap: 4px;
+                gap: 5px;
             }
 
-            .typing-dot {
-                width: 6px;
-                height: 6px;
-                background: #999;
+            .love-typing-dot {
+                width: 8px;
+                height: 8px;
+                background: linear-gradient(135deg, #ff6b9d, #c44569);
                 border-radius: 50%;
-                animation: typing 1.4s infinite;
+                animation: loveTyping 1.6s infinite;
             }
 
-            .typing-dot:nth-child(2) {
+            .love-typing-dot:nth-child(2) {
                 animation-delay: 0.2s;
             }
 
-            .typing-dot:nth-child(3) {
+            .love-typing-dot:nth-child(3) {
                 animation-delay: 0.4s;
             }
 
-            @keyframes typing {
+            @keyframes loveTyping {
                 0%, 60%, 100% {
                     transform: scale(1);
-                    opacity: 0.5;
+                    opacity: 0.6;
                 }
                 30% {
-                    transform: scale(1.2);
+                    transform: scale(1.3);
                     opacity: 1;
                 }
             }
 
-            .chat-input {
-                padding: 15px;
-                border-top: 1px solid #e9ecef;
+            .love-input-container {
+                padding: 20px;
+                border-top: 1px solid rgba(255, 107, 157, 0.2);
                 display: flex;
-                gap: 8px;
+                gap: 10px;
                 background: white;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
             }
 
-            .input-field {
+            .love-input-field {
                 flex: 1;
-                padding: 10px 12px;
-                border: 2px solid #e9ecef;
-                border-radius: 20px;
+                padding: 12px 16px;
+                border: 2px solid rgba(255, 107, 157, 0.3);
+                border-radius: 25px;
                 outline: none;
                 font-size: 14px;
-                transition: border-color 0.3s;
+                transition: all 0.3s ease;
+                background: rgba(255, 238, 248, 0.5);
             }
 
-            .input-field:focus {
-                border-color: #667eea;
+            .love-input-field:focus {
+                border-color: #ff6b9d;
+                background: white;
+                box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
             }
 
-            .send-button {
-                padding: 10px 15px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            .love-input-field::placeholder {
+                color: rgba(255, 107, 157, 0.6);
+            }
+
+            .love-send-button {
+                padding: 12px 18px;
+                background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
                 color: white;
                 border: none;
-                border-radius: 20px;
+                border-radius: 25px;
                 cursor: pointer;
                 font-size: 14px;
                 font-weight: bold;
-                transition: transform 0.2s;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                min-width: 80px;
+                justify-content: center;
             }
 
-            .send-button:hover:not(:disabled) {
+            .love-send-button:hover:not(:disabled) {
                 transform: scale(1.05);
+                box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
             }
 
-            .send-button:disabled {
-                opacity: 0.6;
+            .love-send-button:disabled {
+                opacity: 0.5;
                 cursor: not-allowed;
                 transform: none;
             }
 
-            .notification-badge {
+            .love-notification-badge {
                 position: absolute;
-                top: -5px;
-                right: -5px;
-                width: 20px;
-                height: 20px;
-                background: #dc3545;
+                top: -8px;
+                right: -8px;
+                width: 24px;
+                height: 24px;
+                background: linear-gradient(135deg, #e84393, #d63031);
                 color: white;
                 border-radius: 50%;
                 font-size: 12px;
                 display: none;
                 align-items: center;
                 justify-content: center;
-                animation: pulse 1.5s infinite;
+                animation: lovePulse 2s infinite;
                 font-weight: bold;
+                border: 2px solid white;
             }
 
-            @keyframes pulse {
+            @keyframes lovePulse {
                 0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
+                50% { transform: scale(1.2); }
                 100% { transform: scale(1); }
             }
 
             /* 響應式設計 */
             @media (max-width: 768px) {
-                .chatbot-panel {
-                    width: 320px;
-                    height: 450px;
-                    bottom: 70px;
+                .love-advisor-panel {
+                    width: 350px;
+                    height: 500px;
+                    bottom: 80px;
                 }
             }
 
             @media (max-width: 480px) {
-                .chatbot-widget {
+                .love-advisor-widget {
                     bottom: 15px;
                     right: 15px;
                 }
                 
-                .chatbot-toggle {
-                    width: 50px;
-                    height: 50px;
-                    font-size: 20px;
+                .love-advisor-toggle {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 24px;
                 }
                 
-                .chatbot-panel {
+                .love-advisor-panel {
                     width: calc(100vw - 30px);
-                    height: 70vh;
-                    bottom: 75px;
+                    height: 75vh;
+                    bottom: 85px;
                     right: -15px;
                 }
             }
 
-            .chat-messages::-webkit-scrollbar {
-                width: 4px;
+            .love-messages::-webkit-scrollbar {
+                width: 6px;
             }
 
-            .chat-messages::-webkit-scrollbar-track {
-                background: #f1f1f1;
+            .love-messages::-webkit-scrollbar-track {
+                background: rgba(255, 107, 157, 0.1);
+                border-radius: 3px;
             }
 
-            .chat-messages::-webkit-scrollbar-thumb {
-                background: #c1c1c1;
-                border-radius: 2px;
+            .love-messages::-webkit-scrollbar-thumb {
+                background: linear-gradient(135deg, #ff6b9d, #c44569);
+                border-radius: 3px;
             }
 
-            .chat-messages::-webkit-scrollbar-thumb:hover {
-                background: #a8a8a8;
+            .love-messages::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(135deg, #e84393, #a29bfe);
             }
         `;
         document.head.appendChild(style);
         
-        // 創建 ChatBot HTML
+        // 創建愛情顧問聊天機器人 HTML
         const chatbotHTML = `
-            <div class="chatbot-widget" id="chatbotWidget">
-                <button class="chatbot-toggle" id="chatbotToggle">
-                    <i class="fas fa-comments"></i>
-                    <div class="notification-badge" id="notificationBadge">!</div>
+            <div class="love-advisor-widget" id="loveAdvisorWidget">
+                <button class="love-advisor-toggle" id="loveAdvisorToggle">
+                    💕
+                    <div class="love-notification-badge" id="loveNotificationBadge">💌</div>
                 </button>
                 
-                <div class="chatbot-panel" id="chatbotPanel">
-                    <div class="chatbot-header">
-                        <div class="chatbot-title">🤖 AI 助教 v4</div>
-                        <button class="chatbot-close" id="chatbotClose">
-                            <i class="fas fa-times"></i>
+                <div class="love-advisor-panel" id="loveAdvisorPanel">
+                    <div class="love-advisor-header">
+                        <div class="love-advisor-title">💖 愛情顧問小紅娘</div>
+                        <button class="love-advisor-close" id="loveAdvisorClose">
+                            ✕
                         </button>
                     </div>
                     
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="message system">
-                            歡迎使用 AI 助教！我可以回答您關於欒斌教授或AI課程的任何問題。
+                    <div class="love-messages" id="loveMessages">
+                        <div class="love-message system">
+                            💕 歡迎來到愛情顧問！我是你的專屬小紅娘，無論是戀愛困擾、感情問題，還是想要脫單秘訣，我都能幫你解答！讓我們一起找到你的真愛吧～ 💕
                         </div>
                     </div>
                     
-                    <div class="typing-indicator" id="typingIndicator">
-                        <div class="typing-dots">
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
+                    <div class="love-typing-indicator" id="loveTypingIndicator">
+                        <div class="love-typing-dots">
+                            <div class="love-typing-dot"></div>
+                            <div class="love-typing-dot"></div>
+                            <div class="love-typing-dot"></div>
                         </div>
                     </div>
                     
-                    <div class="chat-input">
+                    <div class="love-input-container">
                         <input 
                             type="text" 
-                            class="input-field" 
-                            id="messageInput" 
-                            placeholder="輸入您的問題..."
+                            class="love-input-field" 
+                            id="loveMessageInput" 
+                            placeholder="告訴我你的愛情煩惱吧... 💭"
                             maxlength="500"
                         >
-                        <button class="send-button" id="sendButton" disabled>發送</button>
+                        <button class="love-send-button" id="loveSendButton" disabled>
+                            發送 💌
+                        </button>
                     </div>
                 </div>
             </div>
@@ -396,10 +451,10 @@ class ChatBot {
     }
     
     getOrCreateSessionId() {
-        let sessionId = localStorage.getItem('chatbot_session_id');
+        let sessionId = localStorage.getItem('love_advisor_session_id');
         if (!sessionId) {
-            sessionId = 'web_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('chatbot_session_id', sessionId);
+            sessionId = 'love_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('love_advisor_session_id', sessionId);
         }
         return sessionId;
     }
@@ -493,7 +548,8 @@ class ChatBot {
                 body: JSON.stringify({
                     message: message,
                     sessionId: this.sessionId,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    type: 'love_advice' // 標記這是愛情建議請求
                 })
             });
             
@@ -504,7 +560,7 @@ class ChatBot {
             const data = await response.json();
             
             if (data.success && data.message) {
-                this.addMessage(data.message, 'ai');
+                this.addMessage(data.message, 'advisor');
                 
                 // 儲存對話到本地
                 this.saveChatToLocal(message, data.message);
@@ -519,7 +575,7 @@ class ChatBot {
             
         } catch (error) {
             console.error('發送訊息時發生錯誤:', error);
-            this.addMessage('抱歉，發生了錯誤。請檢查網路連線或稍後再試。', 'error-message');
+            this.addMessage('💔 抱歉親愛的，小紅娘暫時有點忙，請稍後再來找我聊聊愛情話題吧！', 'error-message');
         } finally {
             // 隱藏打字指示器
             this.hideTypingIndicator();
@@ -528,7 +584,7 @@ class ChatBot {
     
     addMessage(content, type) {
         const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
+        messageDiv.className = `love-message ${type}`;
         messageDiv.textContent = content;
         
         this.messagesContainer.appendChild(messageDiv);
@@ -550,66 +606,101 @@ class ChatBot {
         }, 100);
     }
     
-    saveChatToLocal(userMessage, aiMessage) {
-        const chatHistory = JSON.parse(localStorage.getItem('chatbot_history') || '[]');
+    saveChatToLocal(userMessage, advisorMessage) {
+        const chatHistory = JSON.parse(localStorage.getItem('love_advisor_history') || '[]');
         
         chatHistory.push({
             timestamp: new Date().toISOString(),
             sessionId: this.sessionId,
             userMessage: userMessage,
-            aiMessage: aiMessage
+            advisorMessage: advisorMessage
         });
         
-        // 限制歷史記錄數量（最多保存 100 條）
+        // 限制歷史記錄數量（最多保存 100 條愛情對話）
         if (chatHistory.length > 100) {
             chatHistory.splice(0, chatHistory.length - 100);
         }
         
-        localStorage.setItem('chatbot_history', JSON.stringify(chatHistory));
+        localStorage.setItem('love_advisor_history', JSON.stringify(chatHistory));
     }
     
     loadChatHistory() {
-        const chatHistory = JSON.parse(localStorage.getItem('chatbot_history') || '[]');
+        const chatHistory = JSON.parse(localStorage.getItem('love_advisor_history') || '[]');
         const currentSessionHistory = chatHistory.filter(chat => chat.sessionId === this.sessionId);
         
-        // 只載入最近的 10 條對話
+        // 只載入最近的 10 條愛情對話
         const recentHistory = currentSessionHistory.slice(-10);
         
         recentHistory.forEach(chat => {
             this.addMessage(chat.userMessage, 'user');
-            this.addMessage(chat.aiMessage, 'ai');
+            this.addMessage(chat.advisorMessage, 'advisor');
         });
         
         if (recentHistory.length === 0) {
-            // 如果沒有歷史記錄，顯示歡迎訊息
+            // 如果沒有歷史記錄，顯示溫馨歡迎訊息
             setTimeout(() => {
-                this.addMessage('你好，我是AI助教v4！有什麼關於欒斌教授或AI課程的問題想要問我嗎？', 'ai');
+                const welcomeMessages = [
+                    '💕 嗨～我是你的專屬愛情顧問！有什麼感情問題想要跟我聊聊嗎？',
+                    '💖 不管是暗戀、告白、分手還是挽回，我都能給你最貼心的建議！',
+                    '🌹 還是想要學習一些約會技巧和戀愛心理學呢？快告訴我吧！'
+                ];
+                
+                welcomeMessages.forEach((msg, index) => {
+                    setTimeout(() => {
+                        this.addMessage(msg, 'advisor');
+                    }, (index + 1) * 1500);
+                });
             }, 1000);
         }
     }
     
-    // 清除對話歷史的方法（可以在控制台調用）
+    // 清除愛情對話歷史的方法（可以在控制台調用）
     clearHistory() {
-        localStorage.removeItem('chatbot_history');
-        localStorage.removeItem('chatbot_session_id');
+        localStorage.removeItem('love_advisor_history');
+        localStorage.removeItem('love_advisor_session_id');
         location.reload();
+    }
+    
+    // 獲得愛情建議（額外功能）
+    getLoveAdvice(situation) {
+        const adviceBank = {
+            '暗戀': [
+                '💕 暗戀是美好的開始！試著多了解對方的興趣，找共同話題自然接近',
+                '🌹 勇敢一點，適時表達關心，但不要太過激進，細水長流最動人',
+                '💖 提升自己的魅力，讓自己變得更有趣，吸引力是相互的'
+            ],
+            '告白': [
+                '💌 選擇一個舒適的環境，真誠地表達你的感受',
+                '🎁 準備一個小驚喜，但重點是你的真心話',
+                '💕 不管結果如何，勇敢表達都是值得驕傲的事'
+            ],
+            '約會': [
+                '🍽️ 第一次約會選擇輕鬆的環境，比如咖啡廳或公園',
+                '👗 穿得得體但要舒適，展現真實的自己',
+                '💬 多聽對方說話，展現你的關心和興趣'
+            ]
+        };
+        
+        // 這裡可以根據情況返回相應建議
+        return adviceBank[situation] || ['💖 每個愛情故事都是獨特的，告訴我更多細節，我能給你更準確的建議！'];
     }
 }
 
-// 初始化 ChatBot
+// 初始化愛情顧問聊天機器人
 document.addEventListener('DOMContentLoaded', function() {
     // 等待一秒確保頁面完全載入
     setTimeout(() => {
-        window.chatBot = new ChatBot();
+        window.loveAdvisorChatBot = new LoveAdvisorChatBot();
         
         // 在控制台提供清除歷史的方法
-        window.clearChatHistory = () => {
-            if (confirm('確定要清除所有對話歷史嗎？')) {
-                window.chatBot.clearHistory();
+        window.clearLoveHistory = () => {
+            if (confirm('💔 確定要清除所有愛情對話歷史嗎？那些美好的回憶就會消失了哦～')) {
+                window.loveAdvisorChatBot.clearHistory();
             }
         };
         
-        console.log('ChatBot 載入完成！');
-        console.log('如需清除對話歷史，請在控制台執行：clearChatHistory()');
+        console.log('💕 愛情顧問聊天機器人載入完成！');
+        console.log('💌 如需清除愛情對話歷史，請在控制台執行：clearLoveHistory()');
+        console.log('🌹 準備好接受最貼心的愛情建議了嗎？');
     }, 1000);
 });
